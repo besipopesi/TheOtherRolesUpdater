@@ -21,7 +21,7 @@ namespace TheOtherRolesUpdater.Models
 
         public void Refresh()
         {
-            GameVersion = InstalledVersionScanner.Instance.GetInstalledVersion(Path);
+            GameVersion = InstalledVersionScanner.GetInstalledVersion(Path);
         }
     }
 }

@@ -10,13 +10,9 @@ using Octokit;
 
 namespace TheOtherRolesUpdater.Scanners
 {
-    public class LatestReleaseVersionScanner
+    public static class LatestReleaseVersionScanner
     {
-        private static readonly Lazy<LatestReleaseVersionScanner> _instance = new Lazy<LatestReleaseVersionScanner>((() => new LatestReleaseVersionScanner()));
-        public static LatestReleaseVersionScanner Instance => _instance.Value;
-        private LatestReleaseVersionScanner() { }
-
-        public async Task<string> GetLatestReleaseVersion()
+        public static async Task<string> GetLatestReleaseVersion()
         {
             string latestVersion = MagicStrings.NOT_FOUND;
 

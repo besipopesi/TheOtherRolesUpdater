@@ -12,15 +12,11 @@ using Ionic.Zip;
 
 namespace TheOtherRolesUpdater.Services
 {
-    public class PluginInstallService
+    public static class PluginInstallService
     {
-        private static readonly Lazy<PluginInstallService> instance = new Lazy<PluginInstallService>(() => new PluginInstallService());
-        public static PluginInstallService Instance => instance.Value;
-        private PluginInstallService() { }
+        private static readonly string _filename = MagicStrings.THE_OTHER_ROLES_GITHUB_NAME + MagicStrings.THE_OTHER_ROLES_GITHUB_FILE_EXTENSION;
 
-        private readonly string _filename = MagicStrings.THE_OTHER_ROLES_GITHUB_NAME + MagicStrings.THE_OTHER_ROLES_GITHUB_FILE_EXTENSION;
-
-        public async Task InstallPlugin(string gameFolder)
+        public static async Task InstallPlugin(string gameFolder)
         {
             try
             {
@@ -31,7 +27,7 @@ namespace TheOtherRolesUpdater.Services
 
         }
 
-        private async Task DownloadPlugin()
+        private static async Task DownloadPlugin()
         {
             {
                 GitHubClient client = new GitHubClient(new ProductHeaderValue(Assembly.GetExecutingAssembly().GetName().Name));
@@ -49,7 +45,7 @@ namespace TheOtherRolesUpdater.Services
             }
         }
 
-        private async Task CopyPlugin(string gameFolder)
+        private static async Task CopyPlugin(string gameFolder)
         {
             using (ZipFile zipFile = await Task.Run(() => ZipFile.Read(_filename)))
             {

@@ -14,15 +14,11 @@ namespace TheOtherRolesUpdater.Scanners
 {
     public enum GameFolderScannerType { Quick, Deep }
 
-    public class GameFolderScanner
+    public static class GameFolderScanner
     {
-        private static readonly Lazy<GameFolderScanner> _instance = new Lazy<GameFolderScanner>(() => new GameFolderScanner());
-        public static GameFolderScanner Instance => _instance.Value;
-        private GameFolderScanner() { _foundAmongUsFolders = new List<AmongUsFolder>(); }
+        private static readonly List<AmongUsFolder> _foundAmongUsFolders = new List<AmongUsFolder>();
 
-        private readonly List<AmongUsFolder> _foundAmongUsFolders;
-
-        public async Task<List<AmongUsFolder>> GetGameFolders(GameFolderScannerType scannerType)
+        public static async Task<IEnumerable<AmongUsFolder>> GetGameFolders(GameFolderScannerType scannerType)
         {
             _foundAmongUsFolders.Clear();
 
@@ -41,7 +37,7 @@ namespace TheOtherRolesUpdater.Scanners
             return _foundAmongUsFolders;
         }
 
-        private void QuickScan()
+        private static void QuickScan()
         {
             string steamPath = Registry.GetValue(MagicStrings.STEAM_REGISTRY_KEY, MagicStrings.STEAM_REGISTRY_VALUE, string.Empty).ToString() ?? string.Empty;
 
@@ -55,7 +51,7 @@ namespace TheOtherRolesUpdater.Scanners
             }
         }
 
-        private async Task DeepScan()
+        private static async Task DeepScan()
         {
             foreach (string drive in Directory.GetLogicalDrives())
             {
@@ -63,7 +59,7 @@ namespace TheOtherRolesUpdater.Scanners
             }
         }
 
-        private void SubFolderSearch(string folder)
+        private static void SubFolderSearch(string folder)
         {
             foreach (string subfolder in Directory.EnumerateDirectories(folder))
             {

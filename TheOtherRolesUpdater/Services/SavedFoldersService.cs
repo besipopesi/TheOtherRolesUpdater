@@ -21,14 +21,9 @@ namespace TheOtherRolesUpdater.Services
         }
     }
 
-    public class SavedFoldersService
+    public static class SavedFoldersService
     {
-        private static readonly Lazy<SavedFoldersService> _instance = new Lazy<SavedFoldersService>(() => new SavedFoldersService());
-        public static SavedFoldersService Instance => _instance.Value;
-        private SavedFoldersService() { }
-
-
-        public void WriteSavedFolders(List<AmongUsFolder> amongUsFolders, AmongUsFolder selectedAmongUsFolder)
+        public static void WriteSavedFolders(List<AmongUsFolder> amongUsFolders, AmongUsFolder selectedAmongUsFolder)
         {
             if (amongUsFolders == null)
                 return;
@@ -47,7 +42,7 @@ namespace TheOtherRolesUpdater.Services
             File.WriteAllText(MagicStrings.SETTINGS_FILE, jsonOutput);
         }
 
-        public (List<AmongUsFolder>, AmongUsFolder) ReadSavedFolders()
+        public static (IEnumerable<AmongUsFolder>, AmongUsFolder) ReadSavedFolders()
         {
             List<AmongUsFolder> amongUsFolders = new List<AmongUsFolder>();
             int selectedAmongUsFolderIndex;

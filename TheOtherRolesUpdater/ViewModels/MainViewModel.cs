@@ -110,7 +110,7 @@ namespace TheOtherRolesUpdater.ViewModels
             return async (execute) =>
             {
                 RaiseUiEvent(ScanFoldersStarted);
-                AmongUsFolders = new List<AmongUsFolder>(await GameFolderScanner.Instance.GetGameFolders(GameFolderScannerType.Deep));
+                AmongUsFolders = new List<AmongUsFolder>(await GameFolderScanner.GetGameFolders(GameFolderScannerType.Deep));
                 RaiseUiEvent(ScanFoldersCompleted);
             };
         }
@@ -136,7 +136,7 @@ namespace TheOtherRolesUpdater.ViewModels
                 RaiseUiEvent(UpdateSelectedFolderStarted);
                 try
                 {
-                    await PluginInstallService.Instance.InstallPlugin(SelectedAmongUsFolder.Path);
+                    await PluginInstallService.InstallPlugin(SelectedAmongUsFolder.Path);
                 }
                 catch (Exception ex)
                 {
@@ -171,7 +171,7 @@ namespace TheOtherRolesUpdater.ViewModels
                     amongUsFolder.Refresh();
                     if (!amongUsFolder.GameVersion.Equals(LatestRelease))
                     {
-                        await PluginInstallService.Instance.InstallPlugin(amongUsFolder.Path);
+                        await PluginInstallService.InstallPlugin(amongUsFolder.Path);
                     }
                 }
                 RaiseUiEvent(UpdateAllFoldersCompleted);

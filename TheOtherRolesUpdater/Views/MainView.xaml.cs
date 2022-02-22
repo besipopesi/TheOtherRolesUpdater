@@ -40,17 +40,17 @@ namespace TheOtherRolesUpdater.Views
         {
             viewModel = DataContext as MainViewModel;
 
-            (List<AmongUsFolder> loadedAmongUsFolders, AmongUsFolder selectedAmongUsFolder) = SavedFoldersService.Instance.ReadSavedFolders();
+            (IEnumerable<AmongUsFolder> loadedAmongUsFolders, AmongUsFolder selectedAmongUsFolder) = SavedFoldersService.ReadSavedFolders();
 
             if (loadedAmongUsFolders.Any())
-                viewModel.AmongUsFolders = loadedAmongUsFolders;
+                viewModel.AmongUsFolders = new List<AmongUsFolder>(loadedAmongUsFolders);
             else
-                viewModel.AmongUsFolders = Task.Run(() => GameFolderScanner.Instance.GetGameFolders(GameFolderScannerType.Quick)).Result;
+                viewModel.AmongUsFolders = new List<AmongUsFolder>(Task.Run(() => GameFolderScanner.GetGameFolders(GameFolderScannerType.Quick)).Result);
 
             if (selectedAmongUsFolder != null)
                 viewModel.SelectedAmongUsFolder = selectedAmongUsFolder;
 
-            viewModel.LatestRelease = await LatestReleaseVersionScanner.Instance.GetLatestReleaseVersion();
+            viewModel.LatestRelease = await LatestReleaseVersionScanner.GetLatestReleaseVersion();
 
             viewModel.ScanFoldersStarted += ScanFoldersStarted;
             viewModel.ScanFoldersCompleted += ScanFoldersCompleted;
@@ -80,7 +80,7 @@ namespace TheOtherRolesUpdater.Views
 
         private void UpdateSelectedFolderCompleted(object sender, EventArgs e)
         {
-            UpdateSelectedFolderProgressBar.Visibility= Visibility.Hidden;
+            UpdateSelectedFolderProgressBar.Visibility = Visibility.Hidden;
         }
 
         private void UpdateAllFoldersStarted(object sender, EventArgs e)
@@ -90,7 +90,7 @@ namespace TheOtherRolesUpdater.Views
 
         private void UpdateAllFoldersCompleted(object sender, EventArgs e)
         {
-            UpdateAllFoldersProgressBar.Visibility= Visibility.Hidden;
+            UpdateAllFoldersProgressBar.Visibility = Visibility.Hidden;
         }
 
         private void ExceptionThrown(object sender, EventArgs e)
@@ -107,7 +107,7 @@ namespace TheOtherRolesUpdater.Views
 
         private void OnParentWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            SavedFoldersService.Instance.WriteSavedFolders(viewModel.AmongUsFolders, viewModel.SelectedAmongUsFolder);
+            SavedFoldersService.WriteSavedFolders(viewModel.AmongUsFolders, viewModel.SelectedAmongUsFolder);
         }
     }
 }
