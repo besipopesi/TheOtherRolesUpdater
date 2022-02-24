@@ -96,7 +96,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ExceptionEventArgs.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MagicStrings.cs" />
+    <Compile Include="Exceptions\NoAdminRightsForEpicGamesException.cs" />
     <Compile Include="Scanners\GameFolderScanner.cs" />
     <Compile Include="Scanners\InstalledVersionScanner.cs" />
     <Compile Include="Scanners\LatestReleaseVersionScanner.cs" />

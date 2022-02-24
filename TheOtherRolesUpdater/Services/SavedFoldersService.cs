@@ -13,11 +13,11 @@ namespace TheOtherRolesUpdater.Services
 {
     class SavedFolders
     {
-        public List<string> AmongUsFoldersPaths { get; set; }
+        public Dictionary<string, Platform> AmongUsFoldersPaths { get; set; }
         public int SelectedAmongUsFolderIndex { get; set; }
         public SavedFolders()
         {
-            AmongUsFoldersPaths = new List<string>();
+            AmongUsFoldersPaths = new Dictionary<string, Platform>();
         }
     }
 
@@ -32,7 +32,7 @@ namespace TheOtherRolesUpdater.Services
 
             foreach (AmongUsFolder amongUsFolder in amongUsFolders)
             {
-                savedFolders.AmongUsFoldersPaths.Add(amongUsFolder.Path);
+                savedFolders.AmongUsFoldersPaths.Add(amongUsFolder.Path, amongUsFolder.Platform);
             }
 
             if (selectedAmongUsFolder != null)
@@ -52,13 +52,13 @@ namespace TheOtherRolesUpdater.Services
             {
                 SavedFolders jsonInput = JsonConvert.DeserializeObject<SavedFolders>(File.ReadAllText(MagicStrings.SETTINGS_FILE));
 
-                List<string> amongUsFoldersPaths = jsonInput.AmongUsFoldersPaths;
+                Dictionary<string, Platform> amongUsFoldersPaths = jsonInput.AmongUsFoldersPaths;
                 selectedAmongUsFolderIndex = jsonInput.SelectedAmongUsFolderIndex;
 
-                foreach (string path in amongUsFoldersPaths)
+                foreach ((string path, Platform platform) in amongUsFoldersPaths.Select(x => (x.Key, x.Value)))
                 {
                     if (Directory.Exists(path))
-                        amongUsFolders.Add(new AmongUsFolder(path));
+                        amongUsFolders.Add(new AmongUsFolder(path, platform));
                 }
 
                 if (selectedAmongUsFolderIndex >= 0 && selectedAmongUsFolderIndex < amongUsFolders.Count)

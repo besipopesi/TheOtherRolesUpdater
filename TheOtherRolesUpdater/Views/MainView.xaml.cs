@@ -59,6 +59,7 @@ namespace TheOtherRolesUpdater.Views
             viewModel.UpdateAllFoldersStarted += UpdateAllFoldersStarted;
             viewModel.UpdateAllFoldersCompleted += UpdateAllFoldersCompleted;
             viewModel.ExceptionThrown += ExceptionThrown;
+            viewModel.NoAdminRightsForEpicGamesExceptionRaised += NoAdminRightsForEpicGamesExceptionRaised;
 
             base.OnInitialized(e);
         }
@@ -95,8 +96,13 @@ namespace TheOtherRolesUpdater.Views
 
         private void ExceptionThrown(object sender, EventArgs e)
         {
-            ExceptionEventArgs ex = (ExceptionEventArgs)e;
-            MessageBox.Show(ex.Message, ex.Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+            ExceptionEventArgs args = (ExceptionEventArgs)e;
+            MessageBox.Show(args.Message, args.Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        private void NoAdminRightsForEpicGamesExceptionRaised(object sender, EventArgs e)
+        {
+            ExceptionEventArgs args = (ExceptionEventArgs)e;
+            MessageBox.Show(args.Message, args.Caption, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

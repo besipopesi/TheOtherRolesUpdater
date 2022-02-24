@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using TheOtherRolesUpdater.Commands;
+using TheOtherRolesUpdater.Exceptions;
 using TheOtherRolesUpdater.Models;
 using TheOtherRolesUpdater.Scanners;
 using TheOtherRolesUpdater.Services;
@@ -20,6 +21,7 @@ namespace TheOtherRolesUpdater.ViewModels
         public event EventHandler UpdateAllFoldersStarted;
         public event EventHandler UpdateAllFoldersCompleted;
         public event EventHandler ExceptionThrown;
+        public event EventHandler NoAdminRightsForEpicGamesExceptionRaised;
 
         private List<AmongUsFolder> _amongUsFolders;
         public List<AmongUsFolder> AmongUsFolders
@@ -136,7 +138,14 @@ namespace TheOtherRolesUpdater.ViewModels
                 RaiseUiEvent(UpdateSelectedFolderStarted);
                 try
                 {
+                    if (SelectedAmongUsFolder.Platform == Platform.EpicGames && !Helpers.HasApplicationAdminRights())
+                        throw new NoAdminRightsForEpicGamesException();
+
                     await PluginInstallService.InstallPlugin(SelectedAmongUsFolder.Path);
+                }
+                catch (NoAdminRightsForEpicGamesException ex)
+                {
+                    NoAdminRightsForEpicGamesExceptionRaised?.Invoke(this, new ExceptionEventArgs(ex));
                 }
                 catch (Exception ex)
                 {
