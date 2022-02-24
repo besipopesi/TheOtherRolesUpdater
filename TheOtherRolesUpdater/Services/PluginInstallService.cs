@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
-using Octokit;
 using Ionic.Zip;
-using System.Security.AccessControl;
-using System.Security.Principal;
+
+using Octokit;
 
 namespace TheOtherRolesUpdater.Services
 {
     public static class PluginInstallService
     {
-        //private static readonly string _filename = MagicStrings.THE_OTHER_ROLES_GITHUB_NAME + MagicStrings.THE_OTHER_ROLES_GITHUB_FILE_EXTENSION;
-        private static string tempFilename;
+        private static string _tempFilename;
 
         public static async Task InstallPlugin(string gameFolder)
         {
-            tempFilename = Path.GetTempFileName();
+            _tempFilename = Path.GetTempFileName();
 
             try
             {
@@ -42,7 +37,7 @@ namespace TheOtherRolesUpdater.Services
                 using (HttpClient httpClient = new HttpClient())
                 {
                     Stream stream = await httpClient.GetStreamAsync(downloadUrl);
-                    using (FileStream fileStream = new FileStream(tempFilename, System.IO.FileMode.Create))
+                    using (FileStream fileStream = new FileStream(_tempFilename, System.IO.FileMode.OpenOrCreate))
                     {
                         await stream.CopyToAsync(fileStream);
                     }
@@ -52,10 +47,13 @@ namespace TheOtherRolesUpdater.Services
 
         private static async Task CopyPlugin(string gameFolder)
         {
-            using (ZipFile zipFile = await Task.Run(() => ZipFile.Read(tempFilename)))
+            using (ZipFile zipFile = await Task.Run(() => ZipFile.Read(_tempFilename)))
             {
                 await Task.Run(() => zipFile.ExtractAll(gameFolder, ExtractExistingFileAction.OverwriteSilently));
             }
+
+            if (File.Exists(_tempFilename))
+                File.Delete(_tempFilename);
         }
     }
 }
